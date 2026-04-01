@@ -1,6 +1,5 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
   description: API specification
@@ -10,6 +9,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: translate
+    description: Translation operations
 paths:
   /healthz:
     get:
@@ -24,6 +25,43 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /translate:
+    post:
+      operationId: translateText
+      tags: [translate]
+      summary: Translate plain English to LinkedIn speak
+      description: Takes plain English input and returns LinkedIn-ified corporate speak with a cringe score
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TranslateRequest"
+      responses:
+        "200":
+          description: Successful translation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TranslateResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +71,34 @@ components:
           type: string
       required:
         - status
-
+    TranslateRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          minLength: 1
+          maxLength: 500
+          description: Plain English text to translate
+      required:
+        - text
+    TranslateResponse:
+      type: object
+      properties:
+        translation:
+          type: string
+          description: LinkedIn-ified version of the input
+        cringeScore:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Corporate cringe score from 1-100
+      required:
+        - translation
+        - cringeScore
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error

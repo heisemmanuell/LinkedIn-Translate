@@ -5,18 +5,6 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-export interface HealthStatus {
-  status: string;
-}
-
-export interface TranslateRequest {
-  /**
-   * Plain English text to translate
-   * @minLength 1
-   * @maxLength 500
-   */
-  text: string;
-}
 
 export interface TranslateResponse {
   /** LinkedIn-ified version of the input */
@@ -27,8 +15,4 @@ export interface TranslateResponse {
    * @maximum 100
    */
   cringeScore: number;
-}
-
-export interface ErrorResponse {
-  error: string;
 }

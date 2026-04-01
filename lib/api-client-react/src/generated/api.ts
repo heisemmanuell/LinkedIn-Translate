@@ -5,18 +5,26 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
+  MutationFunction,
   QueryFunction,
   QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { HealthStatus } from "./api.schemas";
+import type {
+  ErrorResponse,
+  HealthStatus,
+  TranslateRequest,
+  TranslateResponse,
+} from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
-import type { ErrorType } from "../custom-fetch";
+import type { ErrorType, BodyType } from "../custom-fetch";
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -99,3 +107,90 @@ export function useHealthCheck<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * Takes plain English input and returns LinkedIn-ified corporate speak with a cringe score
+ * @summary Translate plain English to LinkedIn speak
+ */
+export const getTranslateTextUrl = () => {
+  return `/api/translate`;
+};
+
+export const translateText = async (
+  translateRequest: TranslateRequest,
+  options?: RequestInit,
+): Promise<TranslateResponse> => {
+  return customFetch<TranslateResponse>(getTranslateTextUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(translateRequest),
+  });
+};
+
+export const getTranslateTextMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof translateText>>,
+    TError,
+    { data: BodyType<TranslateRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof translateText>>,
+  TError,
+  { data: BodyType<TranslateRequest> },
+  TContext
+> => {
+  const mutationKey = ["translateText"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof translateText>>,
+    { data: BodyType<TranslateRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return translateText(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type TranslateTextMutationResult = NonNullable<
+  Awaited<ReturnType<typeof translateText>>
+>;
+export type TranslateTextMutationBody = BodyType<TranslateRequest>;
+export type TranslateTextMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Translate plain English to LinkedIn speak
+ */
+export const useTranslateText = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof translateText>>,
+    TError,
+    { data: BodyType<TranslateRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof translateText>>,
+  TError,
+  { data: BodyType<TranslateRequest> },
+  TContext
+> => {
+  return useMutation(getTranslateTextMutationOptions(options));
+};

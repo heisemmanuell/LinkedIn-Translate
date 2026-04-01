@@ -14,3 +14,28 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * Takes plain English input and returns LinkedIn-ified corporate speak with a cringe score
+ * @summary Translate plain English to LinkedIn speak
+ */
+export const translateTextBodyTextMax = 500;
+
+export const TranslateTextBody = zod.object({
+  text: zod
+    .string()
+    .min(1)
+    .max(translateTextBodyTextMax)
+    .describe("Plain English text to translate"),
+});
+
+export const translateTextResponseCringeScoreMax = 100;
+
+export const TranslateTextResponse = zod.object({
+  translation: zod.string().describe("LinkedIn-ified version of the input"),
+  cringeScore: zod
+    .number()
+    .min(1)
+    .max(translateTextResponseCringeScoreMax)
+    .describe("Corporate cringe score from 1-100"),
+});

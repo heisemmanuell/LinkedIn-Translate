@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "LinkedIn Translate"
+version = "1.0.0"
+id = "artifacts/linkedin-translate"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18170
+
+[services.development]
+run = "pnpm --filter @workspace/linkedin-translate run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/linkedin-translate", "run", "build" ]
+publicDir = "artifacts/linkedin-translate/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18170"
+BASE_PATH = "/"

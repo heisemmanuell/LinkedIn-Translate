@@ -48,6 +48,18 @@ Every package extends `tsconfig.base.json` which sets `composite: true`. The roo
 - `pnpm run build` — runs `typecheck` first, then recursively runs `build` in all packages that define it
 - `pnpm run typecheck` — runs `tsc --build --emitDeclarationOnly` using project references
 
+## Applications
+
+### `artifacts/linkedin-translate` (`@workspace/linkedin-translate`)
+
+React + Vite frontend for LinkedIn Translate app. Served at `/` (previewPath). Key components:
+- `src/components/Header.tsx` — sticky header with dark mode toggle
+- `src/components/Translator.tsx` — main split-panel translator UI with API integration
+- `src/components/CringeScoreMeter.tsx` — animated cringe score (1-100) with confetti at 91+
+- `src/components/HistoryPanel.tsx` — collapsible history of last 10 translations (localStorage)
+- Uses `useTranslateText` hook from `@workspace/api-client-react`
+- Depends on: `canvas-confetti`, `framer-motion`, `lucide-react`, LinkedIn-blue theme
+
 ## Packages
 
 ### `artifacts/api-server` (`@workspace/api-server`)
