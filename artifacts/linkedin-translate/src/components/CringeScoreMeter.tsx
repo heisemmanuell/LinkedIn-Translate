@@ -31,10 +31,10 @@ export function CringeScoreMeter({ score }: CringeScoreMeterProps) {
 
   const getLabel = (s: number) => {
     if (s <= 25) return "Intern Energy";
-    if (s <= 50) return "Middle Manager";
+    if (s <= 50) return "The Humble-Bragger";
     if (s <= 75) return "Team Lead Vibes";
-    if (s <= 90) return "Thought Leader";
-    return "LinkedIn Influencer 🚀";
+    if (s <= 90) return "The Final Boss";
+    return "LinkedIn Influencer ";
   };
 
   const getColorClass = (s: number) => {

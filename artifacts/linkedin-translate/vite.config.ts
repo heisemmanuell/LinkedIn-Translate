@@ -66,6 +66,9 @@ export default defineConfig({
       strict: true,
       deny: ["**/.*"],
     },
+    proxy: {
+      "/api": "http://localhost:3000",
+    },
   },
   preview: {
     port,

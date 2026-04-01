@@ -50,6 +50,5 @@ Thumbs.db
 .env.production
 .env.development
 
-# Replit
 .cache/
 .local/

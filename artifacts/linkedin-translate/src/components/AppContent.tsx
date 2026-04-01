@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Translator } from "@/components/Translator";
 import { HistoryPanel, HistoryItem } from "@/components/HistoryPanel";
+import { Twitter, Linkedin } from "lucide-react";
 
 export default function AppContent() {
   const [isDark, setIsDark] = useState(false);
@@ -78,9 +79,26 @@ export default function AppContent() {
         </div>
       </main>
 
-      <footer className="py-6 text-center text-sm text-muted-foreground border-t bg-muted/20">
-        <p className="font-medium text-foreground">Say what you mean. Sound like LinkedIn.</p>
-        <p className="mt-1 opacity-75">Nothing you type is stored on our servers. Keep hustling.</p>
+      <footer className="py-6 text-sm text-muted-foreground border-t bg-muted/20">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between relative">
+          <div className="hidden md:block flex-1"></div>
+          
+          <div className="text-center md:flex-1">
+            <p className="font-medium text-foreground">Say what you mean. Sound like a LinkedIn influencer.</p>
+            <p className="mt-1 opacity-75">Nothing you type is stored on our servers.</p>
+          </div>
+
+          <div className="flex items-center justify-center md:justify-end gap-4 mt-6 md:mt-0 flex-1">
+            <a href="https://x.com/heisemmanuell" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors hover:scale-110 active:scale-95 duration-200">
+              <Twitter className="h-5 w-5" />
+              <span className="sr-only">Twitter</span>
+            </a>
+            <a href="https://www.linkedin.com/in/heisemmanuell" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors hover:scale-110 active:scale-95 duration-200">
+              <Linkedin className="h-5 w-5" />
+              <span className="sr-only">LinkedIn</span>
+            </a>
+          </div>
+        </div>
       </footer>
     </div>
   );

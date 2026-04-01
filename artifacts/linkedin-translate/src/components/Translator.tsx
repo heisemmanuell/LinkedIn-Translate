@@ -86,7 +86,7 @@ export function Translator({ onTranslateSuccess, selectedHistoryItem }: Translat
     setCopied(true);
     toast({
       title: "Copied to clipboard",
-      description: "Ready to go viral! 🚀",
+      description: "Humbly brag away!",
     });
     setTimeout(() => setCopied(false), 2000);
   };
@@ -106,7 +106,7 @@ export function Translator({ onTranslateSuccess, selectedHistoryItem }: Translat
       <div className="flex flex-col space-y-4 rounded-xl border bg-card p-5 lg:p-6 shadow-sm">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold flex items-center gap-2">
-            Your Honest Thoughts
+            Plain English
           </h2>
           <Button 
             variant="outline" 
@@ -143,7 +143,7 @@ export function Translator({ onTranslateSuccess, selectedHistoryItem }: Translat
           {translateMutation.isPending ? (
             <span className="flex items-center">
               <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
-              Synergizing...
+              Crafting humble-bragging post
             </span>
           ) : (
             "Translate to LinkedIn"
@@ -154,7 +154,7 @@ export function Translator({ onTranslateSuccess, selectedHistoryItem }: Translat
       {/* Right Panel: Output */}
       <div className="flex flex-col space-y-4 rounded-xl border bg-primary/5 p-5 lg:p-6 shadow-sm min-h-[400px]">
         <h2 className="text-lg font-semibold flex items-center gap-2 text-primary">
-          Your LinkedIn Post
+          LinkedIn Text
         </h2>
         
         <div className="flex-1 relative rounded-lg border bg-card">
@@ -170,8 +170,8 @@ export function Translator({ onTranslateSuccess, selectedHistoryItem }: Translat
                 <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
                   <MessageSquareQuote className="w-8 h-8 text-muted-foreground/50" />
                 </div>
-                <p>Your thought-leadership journey begins here.</p>
-                <p className="text-sm mt-2 opacity-75">Type something on the left and translate it to see the magic.</p>
+                <p>Get LinkedIn brain-rot content here</p>
+                <p className="text-sm mt-2 opacity-75">Type something on the left and get a LinkedIn professional, bragablle post</p>
               </motion.div>
             ) : (
               <motion.div
@@ -207,14 +207,14 @@ export function Translator({ onTranslateSuccess, selectedHistoryItem }: Translat
                         {copied ? <Check className="w-4 h-4 mr-2 text-green-600" /> : <Copy className="w-4 h-4 mr-2" />}
                         {copied ? "Copied!" : "Copy"}
                       </Button>
-                      <Button 
+                      {/* <Button 
                         className="flex-1 bg-[#0A66C2] hover:bg-[#004182] text-white"
                         onClick={handlePost}
                         data-testid="post-linkedin-button"
                       >
                         <Share2 className="w-4 h-4 mr-2" />
                         Post to LinkedIn
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                 )}

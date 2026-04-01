@@ -41,10 +41,10 @@ export function HistoryPanel({ items, onSelect, onClear }: HistoryPanelProps) {
               variant="ghost" 
               size="sm" 
               onClick={onClear}
-              className="text-muted-foreground hover:text-destructive h-8"
+              className="text-muted-foreground hover:text-destructive h-8 "
               data-testid="clear-history-button"
             >
-              <Trash2 className="h-4 w-4 mr-2" />
+              <Trash2 className="h-4 w-4" />
               Clear
             </Button>
           )}
