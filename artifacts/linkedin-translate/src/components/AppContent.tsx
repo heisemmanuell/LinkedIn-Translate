@@ -26,8 +26,8 @@ export default function AppContent() {
     if (storedHistory) {
       try {
         setHistory(JSON.parse(storedHistory));
-      } catch (e) {
-        console.error("Failed to parse history", e);
+      } catch {
+        localStorage.removeItem("linkedin-translate-history");
       }
     }
   }, []);

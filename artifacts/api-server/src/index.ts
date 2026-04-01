@@ -1,6 +1,11 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 
+if (!process.env.GROQ_API_KEY) {
+  logger.error("FATAL: GROQ_API_KEY is missing from environment. Exiting.");
+  process.exit(1);
+}
+
 const rawPort = process.env["PORT"];
 
 if (!rawPort) {

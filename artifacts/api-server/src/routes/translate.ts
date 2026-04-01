@@ -115,6 +115,14 @@ function calculateCringeScore(text: string): number {
   return Math.min(Math.max(Math.round(score), 1), 100);
 }
 
+router.all("/translate", (req, res, next) => {
+  if (req.method !== "POST") {
+    res.status(405).set("Allow", "POST").json({ error: "Method not allowed." });
+    return;
+  }
+  next();
+});
+
 router.post("/translate", translateLimiter, async (req, res): Promise<void> => {
   const parsed = TranslateTextBody.safeParse(req.body);
   if (!parsed.success) {
@@ -124,16 +132,23 @@ router.post("/translate", translateLimiter, async (req, res): Promise<void> => {
 
   const rawText = parsed.data.text;
 
-  if (!rawText || rawText.trim().length === 0) {
+  if (!rawText || typeof rawText !== "string" || rawText.trim().length === 0) {
     res.status(400).json({ error: "Input text cannot be empty." });
     return;
   }
 
-  const sanitized = sanitizeHtml(rawText, { allowedTags: [], allowedAttributes: {} });
-  const trimmed = sanitized.trim().slice(0, 500);
+  const sanitized = sanitizeHtml(rawText.trim(), {
+    allowedTags: [],
+    allowedAttributes: {},
+  });
 
-  if (trimmed.length === 0) {
+  if (sanitized.length === 0) {
     res.status(400).json({ error: "Input text cannot be empty." });
+    return;
+  }
+
+  if (sanitized.length > 500) {
+    res.status(400).json({ error: "Input must be under 500 characters." });
     return;
   }
 
@@ -155,7 +170,7 @@ router.post("/translate", translateLimiter, async (req, res): Promise<void> => {
         },
         {
           role: "user",
-          content: trimmed,
+          content: sanitized,
         },
       ],
       temperature: 0.9,
