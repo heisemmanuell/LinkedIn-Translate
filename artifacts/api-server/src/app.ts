@@ -30,7 +30,8 @@ app.use(
 app.set("trust proxy", 1);
 app.use(helmet());
 
-const allowedOrigin = process.env.FRONTEND_URL ?? "http://localhost:5173";
+const rawOrigin = process.env.FRONTEND_URL ?? "http://localhost:5173";
+const allowedOrigin = rawOrigin.replace(/\/$/, "");
 
 app.use(
   cors({
