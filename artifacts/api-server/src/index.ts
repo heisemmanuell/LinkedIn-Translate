@@ -6,25 +6,15 @@ if (!process.env.GROQ_API_KEY) {
   process.exit(1);
 }
 
-const rawPort = process.env["PORT"];
-
-if (!rawPort) {
-  throw new Error(
-    "PORT environment variable is required but was not provided.",
-  );
-}
-
+const rawPort = process.env["PORT"] ?? "3000";
 const port = Number(rawPort);
 
 if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
-app.listen(port, (err) => {
-  if (err) {
-    logger.error({ err }, "Error listening on port");
-    process.exit(1);
-  }
+const host = process.env.HOST ?? "0.0.0.0";
 
-  logger.info({ port }, "Server listening");
+app.listen(port, host, () => {
+  logger.info({ host, port }, "Server listening");
 });

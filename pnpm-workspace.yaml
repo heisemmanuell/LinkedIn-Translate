@@ -77,3 +77,6 @@ overrides:
   # Security: force patched versions of vulnerable transitive dependencies
   path-to-regexp: ">=8.4.0"
   picomatch: ">=4.0.4"
+
+allowBuilds:
+  esbuild: true
