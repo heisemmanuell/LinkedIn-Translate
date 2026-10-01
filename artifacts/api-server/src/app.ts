@@ -1,6 +1,7 @@
 import express, { type Express, type Request, type Response, type NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
@@ -27,28 +28,43 @@ app.use(
   }),
 );
 
+app.disable("x-powered-by");
 app.set("trust proxy", 1);
 app.use(helmet());
+
+// Global rate limiter for API protection (200 requests / 15 minutes per IP)
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests from this IP. Please try again later." },
+});
+app.use(globalLimiter);
 
 const rawOrigins = process.env.FRONTEND_URL
   ? process.env.FRONTEND_URL.split(",").map((url) => url.trim().replace(/\/$/, ""))
   : ["http://localhost:5173", "http://localhost:3000"];
 
+const isProd = process.env.NODE_ENV === "production";
+
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Allow requests with no origin (like health checks, server-to-server, curl)
       if (!origin) return callback(null, true);
       const cleaned = origin.replace(/\/$/, "");
-      if (
+      
+      const isAllowed =
         rawOrigins.includes("*") ||
         rawOrigins.includes(cleaned) ||
         cleaned.endsWith(".vercel.app") ||
-        cleaned.includes("localhost") ||
-        cleaned.includes("127.0.0.1")
-      ) {
+        (!isProd && (cleaned.includes("localhost") || cleaned.includes("127.0.0.1")));
+
+      if (isAllowed) {
         return callback(null, true);
       }
-      return callback(null, true);
+      return callback(new Error("CORS origin not allowed"));
     },
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],

@@ -147,8 +147,13 @@ router.post("/translate", translateLimiter, async (req, res): Promise<void> => {
     return;
   }
 
-  if (sanitized.length > 500) {
-    res.status(400).json({ error: "Input must be under 500 characters." });
+  const cleanedText = sanitized
+    .replace(/<\/?text_to_translate>/gi, "")
+    .replace(/[\u0000-\u0008\u000B-\u000C\u000E-\u001F\u007F-\u009F]/g, "")
+    .trim();
+
+  if (cleanedText.length === 0) {
+    res.status(400).json({ error: "Input text cannot be empty." });
     return;
   }
 
@@ -186,7 +191,7 @@ router.post("/translate", translateLimiter, async (req, res): Promise<void> => {
           },
           {
             role: "user",
-            content: `<text_to_translate>\n${sanitized}\n</text_to_translate>`,
+            content: `<text_to_translate>\n${cleanedText}\n</text_to_translate>`,
           },
         ],
         temperature: 0.9,
